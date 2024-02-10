@@ -1,0 +1,158 @@
+  const [election, setElection] =useState("");
+  const [student, setStudent] =useState("");
+  const [schoolID, setSchoolID] = useState([]);
+  const [candidate, setCandidate] =useState([]);
+  const [Vote,setVote ] =useState([]);
+  let name;
+  let course;
+  const params = useParams();
+
+
+  const createdElection=()=>{
+    Axios.get("http://localhost:5000/vote/" + election ).then(res =>{
+      setCandidate(res.data)
+      console.log(res.data)
+    }).catch(err=>{
+      console.log(err);
+  })
+  }
+
+
+  const StudentElected=()=>{
+    Axios.get("http://localhost:5000/school").then(res =>{
+      setSchoolID(res.data)
+      console.log(res.data)
+    }).catch(err=>{
+      console.log(err);
+  })
+  }
+    const Election=()=>{
+      Axios.get("http://localhost:5000/Vote").then(res =>{
+        setVote(res.data)
+        ElectionValidation()
+      }).catch(err=>{
+        console.log(err);
+      })
+    } 
+
+
+    useEffect(()=>{
+      Election();
+      createdElection();
+      StudentElected();
+    },[]);
+
+    function ElectionValidation(){
+      Vote.forEach((info)=>{
+        console.log(info.ElectionName)
+        if(info.Validation===0){
+          setElection(info.ElectionName);
+        }
+      })
+    }
+
+    function StudentName(ID){
+      schoolID.forEach((info)=>{
+        if(ID === info.schoolID){
+          name = info.fullname;
+          course = info.course;
+        }
+      })
+    }
+
+    
+  return (
+    <div>
+      <h5>{election}</h5>
+      {candidate.map((info)=>{
+        return(
+          <div key={info.candidatesID}>
+            {StudentName(info.schoolID)}
+            <p>{info.position}</p>
+            <h5>{info.schoolID}{name}{course}
+            <input type="radio" name="" id="" /> 
+            </h5>
+          </div>
+        )
+      })}
+
+      <button>
+          Submit
+      </button>
+    </div>
+  )
+}
+
+
+
+
+///// function for candidate
+
+
+      for (let index = 0; index <= newPosition.length; index++) {
+        candidate.map((info)=>{
+          if(newPosition[index]===info.position){
+            {StudentName(info.schoolID)}
+            return(
+              <div key={info.candidatesID}>
+              <h4>
+                {info.partylistName} 
+                {name} 
+                {course} 
+                <input type="radio" name="" id="" />
+              </h4>
+              </div>
+            )
+          }else{
+            console.log("not Available ")
+          }
+        })
+    }
+
+
+
+
+      {candidate.map((info)=>{
+            var x=0;
+            {StudentName(info.schoolID)}
+          if( x <= newPosition.length && info.position == newPosition[x]){
+            return(
+              <div key={info.candidatesID}>
+              <h3>{info.position}</h3>
+              <h4>
+                {info.partylistName} 
+                {name} 
+                {course} 
+                <input type="radio" name="" id="" />
+              </h4>
+              </div>
+            )
+          }
+        }
+        )}
+
+
+
+{candidate.map((info)=>{
+              if(info.partylistName == params.partylistName){
+                return(
+                  <div>
+                    <h3>
+                      <CgProfile/>
+                      {info.schoolID}
+                    </h3>
+                    <p>
+                      {info.position}
+                    </p>
+                  </div>
+                )
+              }
+            })}
+
+
+
+            
+        // console.log(removeItem(position,createPosition))
+        // window.location.reload()
+
+        
